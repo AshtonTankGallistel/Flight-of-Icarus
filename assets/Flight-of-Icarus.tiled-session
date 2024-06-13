@@ -1,0 +1,234 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "Attic rooms/Attic_0.tmx",
+    "expandedProjectPaths": [
+        "Attic rooms",
+        "."
+    ],
+    "fileStates": {
+        "": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "#roguelikeSheet": {
+            "scaleInDock": 5.5
+        },
+        "Attic rooms/Attic_0.tmj": {
+            "scale": 4.1265624999999995,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 144.187807648618,
+                "y": 103.83945475198789
+            }
+        },
+        "Attic rooms/Attic_0.tmj#roguelikeSheet": {
+            "scaleInDock": 1
+        },
+        "Attic rooms/Attic_0.tmx": {
+            "scale": 4,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 138.25,
+                "y": 103.375
+            }
+        },
+        "Attic rooms/Attic_0.tmx#roguelikeSheet": {
+            "scaleInDock": 4,
+            "scaleInEditor": 3
+        },
+        "Attic rooms/Attic_1.tmj": {
+            "scale": 4.1265624999999995,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 144.187807648618,
+                "y": 104.0817872018175
+            }
+        },
+        "Attic rooms/Attic_1.tmj#roguelikeSheet": {
+            "scaleInDock": 1
+        },
+        "Attic rooms/Attic_1.tmx": {
+            "expandedObjectLayers": [
+                3
+            ],
+            "scale": 4,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 144,
+                "y": 130.375
+            }
+        },
+        "Attic rooms/Attic_1.tmx#roguelikeSheet": {
+            "scaleInDock": 3,
+            "scaleInEditor": 3
+        },
+        "Attic rooms/Attic_2.tmx": {
+            "scale": 4.1265624999999995,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 139.58349110185537,
+                "y": 119.83339644074215
+            }
+        },
+        "Attic rooms/Attic_2.tmx#roguelikeSheet": {
+            "scaleInDock": 3
+        },
+        "Attic rooms/Attic_3.tmx": {
+            "scale": 4.1265624999999995,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 136.19083680424083,
+                "y": 123.22605073835669
+            }
+        },
+        "Attic rooms/Attic_3.tmx#roguelikeSheet": {
+            "scaleInDock": 3
+        },
+        "Attic rooms/Attic_Border.tmx": {
+            "scale": 3,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 755.3333333333333,
+                "y": 155.83333333333331
+            }
+        },
+        "Attic rooms/Attic_Border.tmx#roguelikeSheet": {
+            "scaleInDock": 4,
+            "scaleInEditor": 2
+        },
+        "Attic rooms/Attic_Boss.tmx": {
+            "expandedObjectLayers": [
+                3
+            ],
+            "scale": 4.1265624999999995,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 137.40249905338888,
+                "y": 104.0817872018175
+            }
+        },
+        "Attic rooms/Attic_Boss.tmx#roguelikeSheet": {
+            "scaleInDock": 2
+        },
+        "Attic rooms/Attic_Item.tmx": {
+            "expandedObjectLayers": [
+                3
+            ],
+            "scale": 3,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 120.66666666666666,
+                "y": 187.83333333333331
+            }
+        },
+        "Attic rooms/Attic_Item.tmx#roguelikeSheet": {
+            "scaleInDock": 2
+        },
+        "Attic rooms/Attic_Shop.tmx": {
+            "scale": 4.1265624999999995,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 143.21847784929952,
+                "y": 104.0817872018175
+            }
+        },
+        "Attic rooms/Attic_Shop.tmx#roguelikeSheet": {
+            "scaleInDock": 3
+        },
+        "Attic rooms/Attic_TrapBorder.tmx": {
+            "scale": 3,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 174.66666666666666,
+                "y": 167.16666666666666
+            }
+        },
+        "Attic rooms/Attic_TrapBorder.tmx#roguelikeSheet": {
+            "scaleInDock": 1
+        },
+        "roguelikeSheet.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 2,
+            "scaleInEditor": 3
+        },
+        "roguelikeSheet_del.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "roguelikeSheet_v2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 23
+        },
+        "roguelikeSheet_v3.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 11
+        },
+        "roguelikeSheet_v4.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "sample_indoor.tmx": {
+            "scale": 0.6745,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 800.5930318754633,
+                "y": 801.3343217197925
+            }
+        },
+        "sample_indoor.tmx#roguelikeSheet_transparent": {
+            "scaleInDock": 1
+        },
+        "sample_map.tmx": {
+            "scale": 0.6745,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 794.6627131208302,
+                "y": 799.8517420311341
+            }
+        },
+        "sample_map.tmx#Roguelike": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.exportedFilePath": "C:/Users/Ashto/Documents/CMPM120/Flight of Icarus/assets/Attic rooms",
+    "last.imagePath": "C:/Users/Ashto/Documents/CMPM120/Flight of Icarus/assets",
+    "map.height": 39,
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 54,
+    "openFiles": [
+        "Attic rooms/Attic_0.tmx"
+    ],
+    "project": "Flight-of-Icarus.tiled-project",
+    "property.type": "string",
+    "recentFiles": [
+        "Attic rooms/Attic_1.tmj",
+        "Attic rooms/Attic_3.tmx",
+        "Attic rooms/Attic_2.tmx",
+        "Attic rooms/Attic_1.tmx",
+        "Attic rooms/Attic_Border.tmx",
+        "Attic rooms/Attic_0.tmx",
+        "Attic rooms/Attic_0.tmj",
+        "roguelikeSheet.tsx",
+        "roguelikeSheet_del.tsx",
+        "roguelikeSheet_v4.tsx",
+        "roguelikeSheet_v3.tsx",
+        "roguelikeSheet_v2.tsx"
+    ],
+    "resizeMap.removeObjects": false,
+    "tileset.embedInMap": true,
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.margin": 0,
+    "tileset.spacing": 1,
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}
