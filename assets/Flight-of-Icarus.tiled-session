@@ -31,7 +31,7 @@
             "scale": 4,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 138.25,
+                "x": 138,
                 "y": 103.375
             }
         },
@@ -57,7 +57,7 @@
             "scale": 4,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 143.75,
+                "x": 143.5,
                 "y": 130.125
             }
         },
@@ -66,26 +66,43 @@
             "scaleInEditor": 3
         },
         "Attic rooms/Attic_2.tmx": {
+            "expandedObjectLayers": [
+                3
+            ],
             "scale": 4.1265624999999995,
-            "selectedLayer": 1,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 139.58349110185537,
-                "y": 119.83339644074215
+                "x": 139.09882620219616,
+                "y": 119.59106399091255
             }
         },
         "Attic rooms/Attic_2.tmx#roguelikeSheet": {
             "scaleInDock": 3
         },
         "Attic rooms/Attic_3.tmx": {
+            "expandedObjectLayers": [
+                3
+            ],
             "scale": 4.1265624999999995,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 136.19083680424083,
-                "y": 123.22605073835669
+                "x": 135.70617190458162,
+                "y": 122.98371828852709
             }
         },
         "Attic rooms/Attic_3.tmx#roguelikeSheet": {
             "scaleInDock": 3
+        },
+        "Attic rooms/Attic_4.tmx": {
+            "scale": 4.1265624999999995,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 144.187807648618,
+                "y": 104.0817872018175
+            }
+        },
+        "Attic rooms/Attic_4.tmx#roguelikeSheet": {
+            "scaleInDock": 1
         },
         "Attic rooms/Attic_Border.tmx": {
             "scale": 3,
@@ -120,7 +137,7 @@
             "scale": 3,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 120.33333333333333,
+                "x": 119.99999999999997,
                 "y": 187.5
             }
         },
@@ -128,11 +145,14 @@
             "scaleInDock": 2
         },
         "Attic rooms/Attic_Shop.tmx": {
+            "expandedObjectLayers": [
+                3
+            ],
             "scale": 4,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 120,
-                "y": 149.875
+                "x": 128.75,
+                "y": 144.625
             }
         },
         "Attic rooms/Attic_Shop.tmx#roguelikeSheet": {

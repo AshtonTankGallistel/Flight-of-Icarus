@@ -54,7 +54,25 @@
          "draworder":"topdown",
          "id":3,
          "name":"Enemies-n-Items",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":964,
+                 "height":16,
+                 "id":1,
+                 "name":"Enemy",
+                 "properties":[
+                        {
+                         "name":"Type",
+                         "type":"string",
+                         "value":"Shooter"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":208,
+                 "y":80
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -62,7 +80,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":1,
+ "nextobjectid":2,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

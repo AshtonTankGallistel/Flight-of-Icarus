@@ -27,7 +27,7 @@ var cursors;
 var wasd;
 var multiplier = 1;
 const SCALE = 5.0;
-const ROOMCOUNT = 3; //amount of numbered rooms, not counting #0
+const ROOMCOUNT = 4; //amount of numbered rooms, not counting #0
 const TILESIZE = 16;
 var my = {sprite: {}, text: {}, vfx: {}, stats: {maxHp:3, hp:3, atk:1, spe:1, invulnerable:0, money:0}};
 
