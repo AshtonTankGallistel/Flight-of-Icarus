@@ -131,6 +131,33 @@ class Load extends Phaser.Scene {
             repeat: -1
         });
 
+        //hp up, 0
+        this.anims.create({
+            key: 'item0',
+            defaultTextureKey: "platformer_characters",
+            frames: [
+                { frame: "tile_0020.png"}
+            ]
+        });
+
+        //spe up, 1
+        this.anims.create({
+            key: 'item1',
+            defaultTextureKey: "platformer_characters",
+            frames: [
+                { frame: "tile_0024.png"}
+            ]
+        });
+
+        //atk up, 2
+        this.anims.create({
+            key: 'item2',
+            defaultTextureKey: "platformer_characters",
+            frames: [
+                { frame: "tile_0017.png"}
+            ]
+        });
+
          // ...and pass to the next Scene
          console.log("exiting load.js");
          this.scene.start("titleScene");

@@ -5,8 +5,8 @@ class Floor extends Phaser.Scene {
 
     init() {
         // variables and settings
-        this.ACCELERATION = 800;
-        this.DRAG = 1500;    // DRAG < ACCELERATION = icy slide
+        this.ACCELERATION = 800 * my.stats.spe;
+        this.DRAG = 1500 * my.stats.spe;    // DRAG < ACCELERATION = icy slide
         //this.physics.world.gravity.y = 1500;
         //this.JUMP_VELOCITY = -700;
         this.PARTICLE_VELOCITY = 50;
@@ -77,6 +77,9 @@ class Floor extends Phaser.Scene {
         this.blockLayers = [];
         this.roomStatus = []; //Tracks if rooms have enemy encounters in them; 'clear','enemy','boss'
         this.floorItem;
+        this.floorItemID = 0;
+        this.storeItem;
+        this.storeItemID = 0;
         this.floorLadder;
         for(let r = 0; r < 3; r++){ // row
             this.groundLayers.push([]);
@@ -112,6 +115,11 @@ class Floor extends Phaser.Scene {
                     //Note for future me; objects in the tiled layer have their center at the bottom left corner,
                     //while phaser has them in the center.
                     //console.log(this.floorItem.x,itemSpawn.x,itemSpawn.x * SCALE, r * config.width - config.width);
+                    this.floorItemID = Math.floor(Math.random() * 3); //0 to 2
+                    this.floorItem.anims.play("item" + this.floorItemID);
+                    console.log(this.floorItemID);
+                    this.floorItem.setScale(SCALE)
+                    this.floorItem.body.setSize(4 * SCALE, 4 * SCALE);
                 }
                 let storeSpawn = this.floors[r][c].findObject("Enemies-n-Items", obj => obj.name === "StoreItem");
                 if(storeSpawn != null){
@@ -123,6 +131,11 @@ class Floor extends Phaser.Scene {
                             fontSize: '64px',
                             backgroundColor: '#000000' 
                         })
+                        this.storeItemID = Math.floor(Math.random() * 3); //0 to 2
+                        this.storeItem.anims.play("item" + this.storeItemID);
+                        console.log(this.storeItemID);
+                        this.storeItem.setScale(SCALE)
+                        this.storeItem.body.setSize(4 * SCALE, 4 * SCALE);
                 }
 
                 //Ladder spawner; temp, they should spawn after the boss fight
@@ -178,6 +191,7 @@ class Floor extends Phaser.Scene {
         this.physics.add.overlap(my.sprite.player, this.floorItem, (obj1, obj2) => {
             obj2.destroy();
             playerStats.itemTotal += 1;
+            this.upgradeStat(this.floorItemID);
         })
         this.physics.add.overlap(my.sprite.player, this.storeItem, (obj1, obj2) => {
             if(my.stats.money >= 15){
@@ -186,6 +200,7 @@ class Floor extends Phaser.Scene {
                 my.text.priceDisplay.destroy();
                 obj2.destroy();
                 playerStats.itemTotal += 1;
+                this.upgradeStat(this.storeItemID);
             }
         })
         //temp; Below overlap should be added when ladder is created, not here
@@ -245,6 +260,21 @@ class Floor extends Phaser.Scene {
             backgroundColor: '#000000' 
         }).setScrollFactor(0)
 
+        //vfx
+        my.vfx.walking = this.add.particles(0, 0, "kenny-particles", {
+            frame: ['smoke_03.png', 'smoke_09.png'],
+            //random: true, //Effect currently seems to be bugged, according to TA. will return to later if the reason is found
+            scale: {start: 0.03, end: 0.1},
+            //maxAliveParticles: 8, //Maxes out visible particles at 8. currently results in sudden bursts
+            lifespan: 350,
+            //gravityY: -400, //Causes particles to rise up in the air after spawning
+            alpha: {start: 1, end: 0.1}, 
+            gravityY: -50,
+            //speedY: -300
+        });
+
+        my.vfx.walking.stop();
+
         // debug key listener (assigned to D key)
         this.input.keyboard.on('keydown-G', () => {
             this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
@@ -258,12 +288,12 @@ class Floor extends Phaser.Scene {
         // Player movement ----------------------------------------<><>
         // Horizontal
         if(wasd.A.isDown && !wasd.D.isDown) { // left
-            if(my.sprite.player.body.velocity.x > -500){
+            if(my.sprite.player.body.velocity.x > -500 * my.stats.spe){
                 my.sprite.player.body.setAccelerationX(-this.ACCELERATION);
             }
             else{
                 //console.log("capped");
-                my.sprite.player.body.velocity.x = -500;
+                my.sprite.player.body.velocity.x = -500 * my.stats.spe;
                 my.sprite.player.body.setDragX(this.DRAG);
             }
             if(my.sprite.player.body.velocity.x >= 0){
@@ -273,17 +303,17 @@ class Floor extends Phaser.Scene {
             my.sprite.player.anims.play('walk', true);
 
             //particle vfx
-            //console.log(my.sprite.player.displayWidth);
-            //my.vfx.walking.startFollow(my.sprite.player, my.sprite.player.displayWidth/2-10, my.sprite.player.displayHeight/2-5, false);
-            //my.vfx.walking.setParticleSpeed(this.PARTICLE_VELOCITY, 0);
+            my.vfx.walking.startFollow(my.sprite.player, my.sprite.player.displayWidth/2-10, my.sprite.player.displayHeight/2-5, false);
+            my.vfx.walking.setParticleSpeed(this.PARTICLE_VELOCITY, 0);
+            console.log("vfx: " + my.vfx.walking.y);
 
         } else if(wasd.D.isDown && !wasd.A.isDown) { // right
-            if(my.sprite.player.body.velocity.x < 500){
+            if(my.sprite.player.body.velocity.x < 500 * my.stats.spe){
                 my.sprite.player.body.setAccelerationX(this.ACCELERATION);
             }
             else{
                 //console.log("capped");
-                my.sprite.player.body.velocity.x = 500;
+                my.sprite.player.body.velocity.x = 500 * my.stats.spe;
                 my.sprite.player.body.setDragX(this.DRAG);
             }
             //console.log(my.sprite.player.body.velocity.x);
@@ -295,8 +325,8 @@ class Floor extends Phaser.Scene {
             my.sprite.player.anims.play('walk', true);
 
             //particle vfx
-            //my.vfx.walking.startFollow(my.sprite.player, -my.sprite.player.displayWidth/2+10, my.sprite.player.displayHeight/2-5, false);
-            //my.vfx.walking.setParticleSpeed(-this.PARTICLE_VELOCITY, 0);
+            my.vfx.walking.startFollow(my.sprite.player, -my.sprite.player.displayWidth/2+10, my.sprite.player.displayHeight/2-5, false);
+            my.vfx.walking.setParticleSpeed(-this.PARTICLE_VELOCITY, 0);
 
         } else {
             // -T-O-D-O-: set acceleration to 0 and have DRAG take over
@@ -304,17 +334,17 @@ class Floor extends Phaser.Scene {
             my.sprite.player.body.setDragX(this.DRAG);
             if(!(wasd.W.isDown || wasd.S.isDown)){
                 my.sprite.player.anims.play('idle');
+                //my.vfx.walking.stop();
             }
-            //my.vfx.walking.stop();
         }
         // Vertical
         if(wasd.W.isDown && !wasd.S.isDown) { // up
-            if(my.sprite.player.body.velocity.y > -500){
+            if(my.sprite.player.body.velocity.y > -500 * my.stats.spe){
                 my.sprite.player.body.setAccelerationY(-this.ACCELERATION);
             }
             else{
                 //console.log("capped");
-                my.sprite.player.body.velocity.y = -500;
+                my.sprite.player.body.velocity.y = -500 * my.stats.spe;
                 my.sprite.player.body.setDragY(this.DRAG);
             }
             if(my.sprite.player.body.velocity.y >= 0){
@@ -325,16 +355,16 @@ class Floor extends Phaser.Scene {
 
             //particle vfx
             //console.log(my.sprite.player.displayWidth);
-            //my.vfx.walking.startFollow(my.sprite.player, my.sprite.player.displayWidth/2-10, my.sprite.player.displayHeight/2-5, false);
-            //my.vfx.walking.setParticleSpeed(this.PARTICLE_VELOCITY, 0);
+            my.vfx.walking.startFollow(my.sprite.player, my.sprite.player.displayWidth/2-10, my.sprite.player.displayHeight/2-5, false);
+            my.vfx.walking.setParticleSpeed(this.PARTICLE_VELOCITY, 0);
 
         } else if(wasd.S.isDown && !wasd.W.isDown) { // down
-            if(my.sprite.player.body.velocity.y < 500){
+            if(my.sprite.player.body.velocity.y < 500 * my.stats.spe){
                 my.sprite.player.body.setAccelerationY(this.ACCELERATION);
             }
             else{
                 //console.log("capped");
-                my.sprite.player.body.velocity.y = 500;
+                my.sprite.player.body.velocity.y = 500 * my.stats.spe;
                 my.sprite.player.body.setDragY(this.DRAG);
             }
             //console.log(my.sprite.player.body.velocity.x);
@@ -346,8 +376,8 @@ class Floor extends Phaser.Scene {
             my.sprite.player.anims.play('walk', true);
 
             //particle vfx
-            //my.vfx.walking.startFollow(my.sprite.player, -my.sprite.player.displayWidth/2+10, my.sprite.player.displayHeight/2-5, false);
-            //my.vfx.walking.setParticleSpeed(-this.PARTICLE_VELOCITY, 0);
+            my.vfx.walking.startFollow(my.sprite.player, -my.sprite.player.displayWidth/2+10, my.sprite.player.displayHeight/2-5, false);
+            my.vfx.walking.setParticleSpeed(-this.PARTICLE_VELOCITY, 0);
 
         } else {
             // -T-O-D-O-: set acceleration to 0 and have DRAG take over
@@ -355,8 +385,8 @@ class Floor extends Phaser.Scene {
             my.sprite.player.body.setDragY(this.DRAG);
             if(!(wasd.A.isDown || wasd.D.isDown)){
                 my.sprite.player.anims.play('idle');
+                //my.vfx.walking.stop();
             }
-            //my.vfx.walking.stop();
         }
 
         // Shooting Controls ----------------------------------------<><>
@@ -500,6 +530,31 @@ class Floor extends Phaser.Scene {
         this.roomLockLayer.x = - (config.width * 5);
         this.roomLockLayer.y = - (config.height * 5);
         this.roomStatus[this.CURRENT_ROOM.x][this.CURRENT_ROOM.y] = 'clear';
+    }
+
+    //upgrades a player stat, call when you pick up an item
+    upgradeStat(itemID){
+        switch(itemID){
+            case 0: //hp
+                my.stats.maxHp += 1;
+                my.stats.hp += 1;
+                //update appearance
+                let heart = this.add.sprite(16 + 32 * my.sprite.healthPoints.length,16, "Ball").setScrollFactor(0).anims.play("heartFilled");
+                heart.setScale(SCALE);
+                heart.x = heart.displayWidth * (my.sprite.healthPoints.length + 0.5);
+                heart.y = heart.displayHeight * 0.5;
+                my.sprite.healthPoints.push(heart);
+                this.updateUI("hp");
+                break;
+            case 1: //speed
+                //speed ranges from 1 to 0, each upgrade = 20% of the remaining different
+                my.stats.spe += (2 - my.stats.spe) * 0.2;
+                this.ACCELERATION = 800 * my.stats.spe;
+                this.DRAG = 1500 * my.stats.spe;
+                break;
+            case 2: //atk
+                my.stats.atk += 0.5;
+        }
     }
 
     // Updates the UI. What section gets updated is determined by the string inputted for 'section'
@@ -908,10 +963,16 @@ class heartDrop{
         this.sprite = scene.physics.add.sprite(x, y,"Ball").anims.play("heartFilled").setScale(SCALE).setSize(TILESIZE * 4/5,TILESIZE * 4/5);
         //this.sprite.body.setCircle(29).setOffset(7 * SCALE, 7 * SCALE);
         scene.physics.add.collider(my.sprite.player, this.sprite, (p1, c1) => {
-            console.log("heart got!");
-            my.stats.hp += 1;
-            scene.updateUI("hp");
-            c1.destroy();
+            if(my.stats.hp < my.stats.maxHp){ //only pickup hp if you have room
+                console.log("heart got!");
+                my.stats.hp += 1;
+                scene.updateUI("hp");
+                c1.destroy();
+            }
+            else{
+                c1.setVelocity(0);
+                c1.setAcceleration(0);
+            }
         })
     }
 }
