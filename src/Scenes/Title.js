@@ -50,6 +50,9 @@ class Title extends Phaser.Scene {
             this.scene.start("floorScene");
         });
 
+        //reset stats
+        my.stats = {maxHp:3, hp:3, atk:1, spe:1, invulnerable:0, money:0};
+
     }
     
     update(){

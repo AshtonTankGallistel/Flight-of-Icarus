@@ -57,8 +57,8 @@
             "scale": 4,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 144,
-                "y": 130.375
+                "x": 143.75,
+                "y": 130.125
             }
         },
         "Attic rooms/Attic_1.tmx#roguelikeSheet": {
@@ -120,19 +120,19 @@
             "scale": 3,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 120.66666666666666,
-                "y": 187.83333333333331
+                "x": 120.33333333333333,
+                "y": 187.5
             }
         },
         "Attic rooms/Attic_Item.tmx#roguelikeSheet": {
             "scaleInDock": 2
         },
         "Attic rooms/Attic_Shop.tmx": {
-            "scale": 4.1265624999999995,
-            "selectedLayer": 1,
+            "scale": 4,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 143.21847784929952,
-                "y": 104.0817872018175
+                "x": 120,
+                "y": 149.875
             }
         },
         "Attic rooms/Attic_Shop.tmx#roguelikeSheet": {

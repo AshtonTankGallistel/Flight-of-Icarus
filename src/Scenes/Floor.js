@@ -113,6 +113,17 @@ class Floor extends Phaser.Scene {
                     //while phaser has them in the center.
                     //console.log(this.floorItem.x,itemSpawn.x,itemSpawn.x * SCALE, r * config.width - config.width);
                 }
+                let storeSpawn = this.floors[r][c].findObject("Enemies-n-Items", obj => obj.name === "StoreItem");
+                if(storeSpawn != null){
+                    this.storeItem = this.physics.add.sprite(storeSpawn.x * SCALE + r * config.width - config.width,
+                        storeSpawn.y * SCALE + c * config.height - config.height,
+                        "Ball");//.setScale(SCALE);
+                        my.text.priceDisplay = this.add.text(this.storeItem.x, this.storeItem.y + 50, `$15`, { 
+                            fontFamily: "rocketSquare",
+                            fontSize: '64px',
+                            backgroundColor: '#000000' 
+                        })
+                }
 
                 //Ladder spawner; temp, they should spawn after the boss fight
                 let ladderSpawn = this.floors[r][c].findObject("Enemies-n-Items", obj => obj.name === "Ladder");
@@ -167,6 +178,15 @@ class Floor extends Phaser.Scene {
         this.physics.add.overlap(my.sprite.player, this.floorItem, (obj1, obj2) => {
             obj2.destroy();
             playerStats.itemTotal += 1;
+        })
+        this.physics.add.overlap(my.sprite.player, this.storeItem, (obj1, obj2) => {
+            if(my.stats.money >= 15){
+                my.stats.money -= 15;
+                this.updateUI("money");
+                my.text.priceDisplay.destroy();
+                obj2.destroy();
+                playerStats.itemTotal += 1;
+            }
         })
         //temp; Below overlap should be added when ladder is created, not here
         this.physics.add.overlap(my.sprite.player, this.floorLadder, (obj1, obj2) => {
@@ -465,10 +485,12 @@ class Floor extends Phaser.Scene {
                     tempenemy = new shooter(enemySpawn.Type,this,tempGrid,enemySpawn.x,enemySpawn.y);
                     break;
                 default:
-                    tempenemy = new enemy(enemySpawn.Type,this,tempGrid,enemySpawn.x,enemySpawn.y);
+                    tempenemy = null;
                     break;
             }
-            this.enemies.push(tempenemy);
+            if(tempenemy != null){
+                this.enemies.push(tempenemy);
+            }
         }
     }
     
