@@ -1,6 +1,6 @@
-class Credits extends Phaser.Scene {
+class GameOver extends Phaser.Scene {
     constructor() {
-        super("creditsScene");
+        super("gameoverScene");
     }
 
     preload() {
@@ -32,27 +32,27 @@ class Credits extends Phaser.Scene {
         this.blockLayer = this.map.createLayer("Blocks-n-Layouts",this.tileset,0,0).setScale(SCALE);
 
         //text
-        my.text.win = this.add.text(288, 100, `CREDITS`, { 
-            fontFamily: "rocketSquare",
-            fontSize: '128px',
-            backgroundColor: '#000000' 
-        })
-        my.text.myCredits = this.add.text(288, 250, `Game coded by\nAshton Gallistel`, { 
+        my.text.title = this.add.text(288, 100, `GAME OVER`, { 
             fontFamily: "rocketSquare",
             fontSize: '64px',
             backgroundColor: '#000000' 
         })
-        my.text.myCredits = this.add.text(288, 400, `bullet and heart sprites\nby Ashton Gallistel`, { 
+        my.text.myCredits = this.add.text(288, 250, `You found ` + playerStats.itemTotal + ' items!', { 
             fontFamily: "rocketSquare",
             fontSize: '64px',
             backgroundColor: '#000000' 
         })
-        my.text.KenCredits = this.add.text(288, 550, `Audio and visual assets\nfrom Kenney Assets`, { 
+        my.text.myCredits = this.add.text(288, 400, `You cleared ` + (playerStats.currentFloor - 1) + ' floors!', { 
             fontFamily: "rocketSquare",
             fontSize: '64px',
             backgroundColor: '#000000' 
         })
-        my.text.startInstructions = this.add.text(288, 750, `Press space to\nreturn to the title`, { 
+        my.text.startInstructions = this.add.text(288, 550, `You collected ` + my.stats.money + ' dollars!', { 
+            fontFamily: "rocketSquare",
+            fontSize: '64px',
+            backgroundColor: '#000000' 
+        })
+        my.text.restartInstructions = this.add.text(288, 700, `Press space to see the credits.`, { 
             fontFamily: "rocketSquare",
             fontSize: '64px',
             backgroundColor: '#000000' 
@@ -62,7 +62,7 @@ class Credits extends Phaser.Scene {
         let SpaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         SpaceKey.on('down',(key,event) =>{
-            this.scene.start("titleScene");
+            this.scene.start("creditsScene");
         });
 
     }

@@ -68,7 +68,7 @@ class FloorTrans extends Phaser.Scene {
         let SpaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         SpaceKey.on('down',(key,event) =>{
-            this.scene.start("titleScene");
+            this.scene.start("floorScene");
         });
 
     }
