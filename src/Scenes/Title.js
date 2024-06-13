@@ -32,7 +32,7 @@ class Title extends Phaser.Scene {
         this.blockLayer = this.map.createLayer("Blocks-n-Layouts",this.tileset,0,0).setScale(SCALE);
 
         //text
-        my.text.title = this.add.text(288, 32, `FLIGHT OF\nICARUS`, { 
+        my.text.title = this.add.text(288, 32, `FLIGHT OF ICARUS`, { 
             fontFamily: "rocketSquare",
             fontSize: '64px',
             backgroundColor: '#000000' 

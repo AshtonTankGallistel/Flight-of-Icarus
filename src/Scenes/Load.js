@@ -159,7 +159,7 @@ class Load extends Phaser.Scene {
         });
 
          // ...and pass to the next Scene
-         console.log("exiting load.js");
+         console.log("(psst, don't worry about the warnings. That's just Firefox being whiny, and from what I can tell, fixing them would cause slowdown)");
          this.scene.start("titleScene");
     }
 

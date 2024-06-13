@@ -675,6 +675,7 @@ class bullet{
             }
         }
         else{ //enemy's bullet
+            this.sprite.tint = 0x29EBB5;
             scene.physics.add.collider(my.sprite.player, this.sprite, (p1, b1) => {
                 if(my.stats.invulnerable <= 0){
                     my.stats.hp -=1;
@@ -717,7 +718,12 @@ class bullet{
             speedY: {start:this.speed * this.dir.y / 4, end: 0},
             speedX: {start:this.speed * this.dir.x / 4, end: 0}
         });
-        tempFlame.particleTint = 0xff610b;
+        if(this.sprite.tint == 0x29EBB5){
+            tempFlame.particleTint = 0x29EBB5;
+        }
+        else{
+            tempFlame.particleTint = 0xff610b;
+        }
         this.sprite.destroy();
         //add destroy particle effect later
     }
@@ -734,17 +740,7 @@ class enemy{
         //this.sprite.body.x -= this.sprite.displayWidth / 2;
         //this.sprite.body.y -= this.sprite.displayheight / 2;
         this.scene = scene;
-
-        //particle
-        this.vfx = this.scene.add.particles(0, 0, "kenny-particles", {
-            frame: ['smoke_03.png', 'smoke_09.png'],
-            scale: {start: 0.03, end: 0.1},
-            lifespan: 350,
-            alpha: {start: 0.5, end: 0.05}, 
-            gravityY: -50,
-            frequency: 25
-        });
-
+        
         //player collision setup
         scene.physics.add.collider(my.sprite.player, this.sprite, (p1, e1) => {
             if(my.stats.invulnerable <= 0){
@@ -796,19 +792,12 @@ class enemy{
 //Enemy subclasses
 class walker extends enemy{
     update(delta){
-        console.log("walker");
         this.timer -= delta;
         //console.log(this.active === true, this.timer <= 0);
         if(this.active === true && this.timer <= 0 && this.sprite != null){
             this.active = false;
-
-            //why isnt this working
-            this.vfx.startFollow(this.sprite, 0, this.sprite.displayHeight/2-5, false);
-            this.vfx.setParticleSpeed(this.PARTICLE_VELOCITY, 0);
-            this.vfx.start();
             this.handleClick(my.sprite.player.body,this.scene);
         }
-        console.log("vfx: " + this.vfx.y);
     }
     //pathfinding stuff
     handleClick(pointer) {
