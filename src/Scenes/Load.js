@@ -120,6 +120,17 @@ class Load extends Phaser.Scene {
             repeat: -1
         });
 
+        this.anims.create({
+            key: 'enemyShoot',
+            defaultTextureKey: "platformer_characters",
+            frames: [
+                { frame: "tile_0004.png"},
+                { frame: "tile_0005.png"}
+            ],
+            frameRate: 15,
+            repeat: -1
+        });
+
          // ...and pass to the next Scene
          console.log("exiting load.js");
          this.scene.start("titleScene");

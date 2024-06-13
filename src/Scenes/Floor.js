@@ -575,7 +575,9 @@ class bullet{
                     this.scene.updateUI("hp");
                     my.stats.hp -=1;
                     my.stats.invulnerable = 1400; //1.4 secs of invincibility
-                    this.scene.scene.start("gameoverScene");
+                    if(my.stats.hp <= 0){
+                        this.scene.scene.start("gameoverScene");
+                    }
                     this.destroySprite();
                 }
             })
@@ -622,7 +624,9 @@ class enemy{
                 this.scene.updateUI("hp");
                 my.stats.hp -=1;
                 my.stats.invulnerable = 1400; //1.4 secs of invincibility
-                this.scene.scene.start("gameoverScene");
+                if(my.stats.hp <= 0){
+                    this.scene.scene.start("gameoverScene");
+                }
             }
         })
 
@@ -739,6 +743,7 @@ class walker extends enemy{
 class shooter extends enemy{
     constructor(type, scene, roomGrid, x, y){
         super(type, scene, roomGrid, x, y);
+        this.sprite.anims.play("enemyShoot");
         this.shootTimer = 1250;
     }
     update(delta){
