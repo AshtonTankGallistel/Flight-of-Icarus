@@ -11,6 +11,7 @@ class Floor extends Phaser.Scene {
         //this.JUMP_VELOCITY = -700;
         this.PARTICLE_VELOCITY = 50;
         this.CURRENT_ROOM = {x:1,y:1}; // 1,1 is the center
+        this.STORE_COST = 7;
     }
 
     preload() {
@@ -126,7 +127,7 @@ class Floor extends Phaser.Scene {
                     this.storeItem = this.physics.add.sprite(storeSpawn.x * SCALE + r * config.width - config.width,
                         storeSpawn.y * SCALE + c * config.height - config.height,
                         "Ball");//.setScale(SCALE);
-                        my.text.priceDisplay = this.add.text(this.storeItem.x, this.storeItem.y + 50, `$15`, { 
+                        my.text.priceDisplay = this.add.text(this.storeItem.x, this.storeItem.y + 50, `$` + this.STORE_COST, { 
                             fontFamily: "rocketSquare",
                             fontSize: '64px',
                             backgroundColor: '#000000' 
@@ -194,8 +195,8 @@ class Floor extends Phaser.Scene {
             this.upgradeStat(this.floorItemID);
         })
         this.physics.add.overlap(my.sprite.player, this.storeItem, (obj1, obj2) => {
-            if(my.stats.money >= 15){
-                my.stats.money -= 15;
+            if(my.stats.money >= this.STORE_COST){
+                my.stats.money -= this.STORE_COST;
                 this.updateUI("money");
                 my.text.priceDisplay.destroy();
                 obj2.destroy();
@@ -259,6 +260,14 @@ class Floor extends Phaser.Scene {
             fontSize: '64px',
             backgroundColor: '#000000' 
         }).setScrollFactor(0)
+        //Item info popup
+        //Maybe doesn't belong here, but it's the best place to put it
+        my.text.itemPopup = this.add.text(config.width / 2, config.height / 3, `Stat up`, { 
+            fontFamily: "rocketSquare",
+            fontSize: '64px',
+            backgroundColor: '#000000' 
+        }).setScrollFactor(0)
+        my.text.itemPopup.visible = false;
 
         //vfx
         my.vfx.walking = this.add.particles(0, 0, "kenny-particles", {
@@ -471,26 +480,37 @@ class Floor extends Phaser.Scene {
                 this.CURRENT_ROOM.x -= 1;
                 this.cameraMoving = true;
                 this.cameraGoal.x -= config.width;
+                //Move the player so they're past where the lock border would be
+                my.sprite.player.x -= my.sprite.player.displayWidth / 2 + 1;
             }
             else if(my.sprite.player.x > this.cameras.main.scrollX + config.width){ //right
                 this.CURRENT_ROOM.x += 1;
                 this.cameraMoving = true;
                 this.cameraGoal.x += config.width;
+                //Move the player so they're past where the lock border would be
+                my.sprite.player.x += my.sprite.player.displayWidth / 2 + 1;
             }
             else if(my.sprite.player.y < this.cameras.main.scrollY){ //up
                 this.CURRENT_ROOM.y -= 1;
                 this.cameraMoving = true;
                 this.cameraGoal.y -= config.height;
+                //Move the player so they're past where the lock border would be
+                my.sprite.player.y -= my.sprite.player.displayHeight / 2 + 1;
             }
             else if(my.sprite.player.y > this.cameras.main.scrollY + config.height){ //down
                 this.CURRENT_ROOM.y += 1;
                 this.cameraMoving = true;
                 this.cameraGoal.y += config.height;
+                //Move the player so they're past where the lock border would be
+                my.sprite.player.y += my.sprite.player.displayHeight / 2 + 1;
             }
-            if(this.cameraMoving == true && (this.roomStatus[this.CURRENT_ROOM.x][this.CURRENT_ROOM.y] == 'enemy'
-                || this.roomStatus[this.CURRENT_ROOM.x][this.CURRENT_ROOM.y] == 'boss')){
-                //console.log("huh");
-                this.lockRoom();
+            //On room change
+            if(this.cameraMoving == true){
+                my.text.itemPopup.visible = false; //clear any item text that has appeared
+                if(this.roomStatus[this.CURRENT_ROOM.x][this.CURRENT_ROOM.y] == 'enemy'
+                    || this.roomStatus[this.CURRENT_ROOM.x][this.CURRENT_ROOM.y] == 'boss'){
+                    this.lockRoom(); //lock the room if there's an encounter
+                }
             }
         }
     }
@@ -536,6 +556,7 @@ class Floor extends Phaser.Scene {
     upgradeStat(itemID){
         switch(itemID){
             case 0: //hp
+                my.text.itemPopup.text = "HP UP!";
                 my.stats.maxHp += 1;
                 my.stats.hp += 1;
                 //update appearance
@@ -547,14 +568,19 @@ class Floor extends Phaser.Scene {
                 this.updateUI("hp");
                 break;
             case 1: //speed
+                my.text.itemPopup.text = "SPEED UP!";
                 //speed ranges from 1 to 0, each upgrade = 20% of the remaining different
                 my.stats.spe += (2 - my.stats.spe) * 0.2;
                 this.ACCELERATION = 800 * my.stats.spe;
                 this.DRAG = 1500 * my.stats.spe;
                 break;
             case 2: //atk
+                my.text.itemPopup.text = "ATTACK UP!";
                 my.stats.atk += 0.5;
+                break;
         }
+        my.text.itemPopup.x = config.width / 2 - my.text.itemPopup.displayWidth / 2;
+        my.text.itemPopup.visible = true;
     }
 
     // Updates the UI. What section gets updated is determined by the string inputted for 'section'
@@ -822,7 +848,9 @@ class shooter extends enemy{
     constructor(type, scene, roomGrid, x, y){
         super(type, scene, roomGrid, x, y);
         this.sprite.anims.play("enemyShoot");
-        this.shootTimer = 1250;
+        this.shootTimer = 1750;
+        this.shootTimerSetter = 1250;
+        this.tweenMoveTime = 450;
     }
     update(delta){
         this.timer -= delta;
@@ -858,7 +886,7 @@ class shooter extends enemy{
         //shooting updater
         this.shootTimer -= delta;
         if(this.shootTimer <= 0){
-            this.shootTimer = 750;
+            this.shootTimer = this.shootTimerSetter;
             let dir ={
                 x: my.sprite.player.x - this.sprite.x,
                 y: my.sprite.player.y - this.sprite.y
@@ -911,7 +939,7 @@ class shooter extends enemy{
                 targets: character,
                 x: ex*this.scene.map.tileWidth*SCALE,
                 y: ey*this.scene.map.tileHeight*SCALE,
-                duration: 250
+                duration: this.tweenMoveTime
             });
             /*
             if(i == path.length - 2){
@@ -942,6 +970,15 @@ class shooter extends enemy{
     }
 }
 
+class rival extends shooter{
+    constructor(type, scene, roomGrid, x, y){
+        super(type, scene, roomGrid, x, y);
+        this.shootTimer = 1250;
+        this.shootTimerSetter = 750;
+        this.tweenMoveTime = 250;
+    }
+}
+
 // grabbable drops
 class coin{
     constructor(scene,x,y){
@@ -967,12 +1004,12 @@ class heartDrop{
                 console.log("heart got!");
                 my.stats.hp += 1;
                 scene.updateUI("hp");
-                c1.destroy();
             }
             else{
                 c1.setVelocity(0);
                 c1.setAcceleration(0);
             }
+            c1.destroy(); //Always gets destroyed; otherwise can block the player
         })
     }
 }
