@@ -282,7 +282,7 @@ class Floor extends Phaser.Scene {
             //speedY: -300
         });
 
-        my.vfx.walking.stop();
+        //my.vfx.walking.stop();
 
         // debug key listener (assigned to D key)
         this.input.keyboard.on('keydown-G', () => {
@@ -295,6 +295,59 @@ class Floor extends Phaser.Scene {
     update(time,delta){
         //console.log(this.cameras.main.x);
         // Player movement ----------------------------------------<><>
+        // Vertical
+        if(wasd.W.isDown && !wasd.S.isDown) { // up
+            if(my.sprite.player.body.velocity.y > -500 * my.stats.spe){
+                my.sprite.player.body.setAccelerationY(-this.ACCELERATION);
+            }
+            else{
+                //console.log("capped");
+                my.sprite.player.body.velocity.y = -500 * my.stats.spe;
+                my.sprite.player.body.setDragY(this.DRAG);
+            }
+            if(my.sprite.player.body.velocity.y >= 0){
+                my.sprite.player.body.setVelocityY(-this.ACCELERATION * 0.25);
+            }
+            my.sprite.player.resetFlip();
+            my.sprite.player.anims.play('walk', true);
+
+            //particle vfx
+            //console.log(my.sprite.player.displayWidth);
+            my.vfx.walking.startFollow(my.sprite.player, 0, my.sprite.player.displayHeight/2-5, false);
+            my.vfx.walking.setParticleSpeed(this.PARTICLE_VELOCITY, 0);
+            my.vfx.walking.start();
+
+        } else if(wasd.S.isDown && !wasd.W.isDown) { // down
+            if(my.sprite.player.body.velocity.y < 500 * my.stats.spe){
+                my.sprite.player.body.setAccelerationY(this.ACCELERATION);
+            }
+            else{
+                //console.log("capped");
+                my.sprite.player.body.velocity.y = 500 * my.stats.spe;
+                my.sprite.player.body.setDragY(this.DRAG);
+            }
+            //console.log(my.sprite.player.body.velocity.x);
+            if(my.sprite.player.body.velocity.y <= 0){
+                my.sprite.player.body.setVelocityY(this.ACCELERATION * 0.25);
+            }
+            //my.sprite.player.body.setDragX(this.DRAG / 2);
+            my.sprite.player.setFlip(true, false);
+            my.sprite.player.anims.play('walk', true);
+
+            //particle vfx
+            my.vfx.walking.startFollow(my.sprite.player, 0, my.sprite.player.displayHeight/2-5, false);
+            my.vfx.walking.setParticleSpeed(-this.PARTICLE_VELOCITY, 0);
+            my.vfx.walking.start();
+
+        } else {
+            // -T-O-D-O-: set acceleration to 0 and have DRAG take over
+            my.sprite.player.body.setAccelerationY(0);
+            my.sprite.player.body.setDragY(this.DRAG);
+            if(!(wasd.A.isDown || wasd.D.isDown)){
+                my.sprite.player.anims.play('idle');
+                my.vfx.walking.stop();
+            }
+        }
         // Horizontal
         if(wasd.A.isDown && !wasd.D.isDown) { // left
             if(my.sprite.player.body.velocity.x > -500 * my.stats.spe){
@@ -314,6 +367,7 @@ class Floor extends Phaser.Scene {
             //particle vfx
             my.vfx.walking.startFollow(my.sprite.player, my.sprite.player.displayWidth/2-10, my.sprite.player.displayHeight/2-5, false);
             my.vfx.walking.setParticleSpeed(this.PARTICLE_VELOCITY, 0);
+            my.vfx.walking.start();
             console.log("vfx: " + my.vfx.walking.y);
 
         } else if(wasd.D.isDown && !wasd.A.isDown) { // right
@@ -336,6 +390,7 @@ class Floor extends Phaser.Scene {
             //particle vfx
             my.vfx.walking.startFollow(my.sprite.player, -my.sprite.player.displayWidth/2+10, my.sprite.player.displayHeight/2-5, false);
             my.vfx.walking.setParticleSpeed(-this.PARTICLE_VELOCITY, 0);
+            my.vfx.walking.start();
 
         } else {
             // -T-O-D-O-: set acceleration to 0 and have DRAG take over
@@ -343,58 +398,7 @@ class Floor extends Phaser.Scene {
             my.sprite.player.body.setDragX(this.DRAG);
             if(!(wasd.W.isDown || wasd.S.isDown)){
                 my.sprite.player.anims.play('idle');
-                //my.vfx.walking.stop();
-            }
-        }
-        // Vertical
-        if(wasd.W.isDown && !wasd.S.isDown) { // up
-            if(my.sprite.player.body.velocity.y > -500 * my.stats.spe){
-                my.sprite.player.body.setAccelerationY(-this.ACCELERATION);
-            }
-            else{
-                //console.log("capped");
-                my.sprite.player.body.velocity.y = -500 * my.stats.spe;
-                my.sprite.player.body.setDragY(this.DRAG);
-            }
-            if(my.sprite.player.body.velocity.y >= 0){
-                my.sprite.player.body.setVelocityY(-this.ACCELERATION * 0.25);
-            }
-            my.sprite.player.resetFlip();
-            my.sprite.player.anims.play('walk', true);
-
-            //particle vfx
-            //console.log(my.sprite.player.displayWidth);
-            my.vfx.walking.startFollow(my.sprite.player, my.sprite.player.displayWidth/2-10, my.sprite.player.displayHeight/2-5, false);
-            my.vfx.walking.setParticleSpeed(this.PARTICLE_VELOCITY, 0);
-
-        } else if(wasd.S.isDown && !wasd.W.isDown) { // down
-            if(my.sprite.player.body.velocity.y < 500 * my.stats.spe){
-                my.sprite.player.body.setAccelerationY(this.ACCELERATION);
-            }
-            else{
-                //console.log("capped");
-                my.sprite.player.body.velocity.y = 500 * my.stats.spe;
-                my.sprite.player.body.setDragY(this.DRAG);
-            }
-            //console.log(my.sprite.player.body.velocity.x);
-            if(my.sprite.player.body.velocity.y <= 0){
-                my.sprite.player.body.setVelocityY(this.ACCELERATION * 0.25);
-            }
-            //my.sprite.player.body.setDragX(this.DRAG / 2);
-            my.sprite.player.setFlip(true, false);
-            my.sprite.player.anims.play('walk', true);
-
-            //particle vfx
-            my.vfx.walking.startFollow(my.sprite.player, -my.sprite.player.displayWidth/2+10, my.sprite.player.displayHeight/2-5, false);
-            my.vfx.walking.setParticleSpeed(-this.PARTICLE_VELOCITY, 0);
-
-        } else {
-            // -T-O-D-O-: set acceleration to 0 and have DRAG take over
-            my.sprite.player.body.setAccelerationY(0);
-            my.sprite.player.body.setDragY(this.DRAG);
-            if(!(wasd.A.isDown || wasd.D.isDown)){
-                my.sprite.player.anims.play('idle');
-                //my.vfx.walking.stop();
+                my.vfx.walking.stop();
             }
         }
 
@@ -1009,7 +1013,7 @@ class heartDrop{
                 c1.setVelocity(0);
                 c1.setAcceleration(0);
             }
-            c1.destroy(); //Always gets destroyed; otherwise can block the player
+            c1.destroy(); //Always gets destroyed; otherwise can block the player and can be pushed out of bounds
         })
     }
 }
