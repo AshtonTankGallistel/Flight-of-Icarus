@@ -217,6 +217,7 @@ class Floor extends Phaser.Scene {
             heart.y = heart.displayHeight * 0.5;
             my.sprite.healthPoints.push(heart);
         }
+        this.updateUI("hp");
         //money
         my.text.money = this.add.text(0, my.sprite.healthPoints[0].displayHeight, `$${ my.stats.money }`, { 
             fontFamily: "rocketSquare",
@@ -484,12 +485,12 @@ class Floor extends Phaser.Scene {
         console.log("bruh" + my.stats.hp);
         switch(section){
             case "hp":
-                for(let i = 0; i < my.stats.maxHp; i++){
-                    if(i >= my.stats.hp - 1){
-                        my.sprite.healthPoints[i].anims.play("heartEmpty");
+                for(let i = 1; i <= my.stats.maxHp; i++){
+                    if(i <= my.stats.hp){
+                        my.sprite.healthPoints[i - 1].anims.play("heartFilled");
                     }
                     else{
-                        my.sprite.healthPoints[i].anims.play("heartFilled");
+                        my.sprite.healthPoints[i - 1].anims.play("heartEmpty");
                     }
                 }
                 break;
@@ -572,8 +573,8 @@ class bullet{
         else{ //enemy's bullet
             scene.physics.add.collider(my.sprite.player, this.sprite, (p1, b1) => {
                 if(my.stats.invulnerable <= 0){
-                    this.scene.updateUI("hp");
                     my.stats.hp -=1;
+                    this.scene.updateUI("hp");
                     my.stats.invulnerable = 1400; //1.4 secs of invincibility
                     if(my.stats.hp <= 0){
                         this.scene.scene.start("gameoverScene");
@@ -621,8 +622,8 @@ class enemy{
         //player collision setup
         scene.physics.add.collider(my.sprite.player, this.sprite, (p1, e1) => {
             if(my.stats.invulnerable <= 0){
-                this.scene.updateUI("hp");
                 my.stats.hp -=1;
+                this.scene.updateUI("hp");
                 my.stats.invulnerable = 1400; //1.4 secs of invincibility
                 if(my.stats.hp <= 0){
                     this.scene.scene.start("gameoverScene");
