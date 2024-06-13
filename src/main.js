@@ -4,7 +4,9 @@
 // game config
 let config = {
     parent: 'phaser-game',
-    type: Phaser.CANVAS,
+    //This causes a few warnings in firefox; nothing bad is happening, apparently it'd cause a slowdown if I tried to fix it.
+    //tldr: don't worry about the errors, firefox is just whiny.
+    type: Phaser.WEBGL, 
     render: {
         pixelArt: true  // prevent pixel art from getting blurred when scaled
     },

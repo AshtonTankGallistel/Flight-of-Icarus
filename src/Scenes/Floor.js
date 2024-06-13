@@ -272,14 +272,11 @@ class Floor extends Phaser.Scene {
         //vfx
         my.vfx.walking = this.add.particles(0, 0, "kenny-particles", {
             frame: ['smoke_03.png', 'smoke_09.png'],
-            //random: true, //Effect currently seems to be bugged, according to TA. will return to later if the reason is found
             scale: {start: 0.03, end: 0.1},
-            //maxAliveParticles: 8, //Maxes out visible particles at 8. currently results in sudden bursts
             lifespan: 350,
-            //gravityY: -400, //Causes particles to rise up in the air after spawning
-            alpha: {start: 1, end: 0.1}, 
+            alpha: {start: 0.5, end: 0.05}, 
             gravityY: -50,
-            //speedY: -300
+            frequency: 25
         });
 
         //my.vfx.walking.stop();
@@ -704,11 +701,23 @@ class bullet{
             //If enough time has passed, the bullet gets "deleted"
             this.bulletLifetime -= delta;
             if(this.bulletLifetime <= 0){
-                this.sprite.destroy();
+                this.destroySprite();
             }
         }
     }
     destroySprite(){
+        let tempFlame = this.scene.add.particles(this.sprite.x, this.sprite.y, "kenny-particles", {
+            frame: ['flame_01.png', 'flame_02.png','flame_03.png', 'flame_04.png'],
+            random: true,
+            scale: {start: 0.2, end: 0.15},
+            lifespan: 500,
+            alpha: {start: 0.5, end: 0}, 
+            quantity: 5,
+            stopAfter: 5, //spawns 5 instantly, then stops
+            speedY: {start:this.speed * this.dir.y / 4, end: 0},
+            speedX: {start:this.speed * this.dir.x / 4, end: 0}
+        });
+        tempFlame.particleTint = 0xff610b;
         this.sprite.destroy();
         //add destroy particle effect later
     }
@@ -725,6 +734,16 @@ class enemy{
         //this.sprite.body.x -= this.sprite.displayWidth / 2;
         //this.sprite.body.y -= this.sprite.displayheight / 2;
         this.scene = scene;
+
+        //particle
+        this.vfx = this.scene.add.particles(0, 0, "kenny-particles", {
+            frame: ['smoke_03.png', 'smoke_09.png'],
+            scale: {start: 0.03, end: 0.1},
+            lifespan: 350,
+            alpha: {start: 0.5, end: 0.05}, 
+            gravityY: -50,
+            frequency: 25
+        });
 
         //player collision setup
         scene.physics.add.collider(my.sprite.player, this.sprite, (p1, e1) => {
@@ -782,8 +801,14 @@ class walker extends enemy{
         //console.log(this.active === true, this.timer <= 0);
         if(this.active === true && this.timer <= 0 && this.sprite != null){
             this.active = false;
+
+            //why isnt this working
+            this.vfx.startFollow(this.sprite, 0, this.sprite.displayHeight/2-5, false);
+            this.vfx.setParticleSpeed(this.PARTICLE_VELOCITY, 0);
+            this.vfx.start();
             this.handleClick(my.sprite.player.body,this.scene);
         }
+        console.log("vfx: " + this.vfx.y);
     }
     //pathfinding stuff
     handleClick(pointer) {
@@ -990,6 +1015,15 @@ class coin{
         this.sprite = scene.physics.add.sprite(x, y,"Ball");
         this.sprite.body.setCircle(29).setOffset(7 * SCALE, 7 * SCALE);
         scene.physics.add.collider(my.sprite.player, this.sprite, (p1, c1) => {
+            scene.add.particles(this.sprite.x, this.sprite.y, "kenny-particles", {
+                frame: ['star_01.png', 'star_02.png', 'star_03.png', 'star_03.png'],
+                scale: {start: 0.03, end: 0.1},
+                lifespan: 500,
+                alpha: {start: 1, end: 0.1}, 
+                quantity: 5,
+                stopAfter: 5, //spawns 5 instantly, then stops
+                tint: 0xFFC90E
+            });
             console.log("coin got!");
             my.stats.money += 1;
             scene.updateUI("money");
@@ -1004,6 +1038,15 @@ class heartDrop{
         this.sprite = scene.physics.add.sprite(x, y,"Ball").anims.play("heartFilled").setScale(SCALE).setSize(TILESIZE * 4/5,TILESIZE * 4/5);
         //this.sprite.body.setCircle(29).setOffset(7 * SCALE, 7 * SCALE);
         scene.physics.add.collider(my.sprite.player, this.sprite, (p1, c1) => {
+            scene.add.particles(this.sprite.x, this.sprite.y, "kenny-particles", {
+                frame: ['star_01.png', 'star_02.png', 'star_03.png', 'star_03.png'],
+                scale: {start: 0.03, end: 0.1},
+                lifespan: 500,
+                alpha: {start: 1, end: 0.1}, 
+                quantity: 5,
+                stopAfter: 5, //spawns 5 instantly, then stops
+                tint: 0xEB3324
+            });
             if(my.stats.hp < my.stats.maxHp){ //only pickup hp if you have room
                 console.log("heart got!");
                 my.stats.hp += 1;
