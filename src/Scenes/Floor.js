@@ -271,6 +271,7 @@ class Floor extends Phaser.Scene {
         my.text.itemPopup.visible = false;
 
         //vfx
+        //walking
         my.vfx.walking = this.add.particles(0, 0, "kenny-particles", {
             frame: ['smoke_03.png', 'smoke_09.png'],
             scale: {start: 0.03, end: 0.1},
@@ -279,8 +280,8 @@ class Floor extends Phaser.Scene {
             gravityY: -50,
             frequency: 25
         });
+        //room entrance
 
-        //my.vfx.walking.stop();
 
         //play music
         this.bgMusic = this.sound.add("attic-theme");
@@ -1027,8 +1028,8 @@ class coin{
                 tint: 0xFFC90E
             });
             scene.sound.play("coin-collect");
-            
             my.stats.money += 1;
+            scene.updateUI("money");
             c1.destroy();
         })
     }
