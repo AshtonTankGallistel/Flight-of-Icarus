@@ -963,6 +963,14 @@ class walker extends enemy{
             this.active = false;
             this.handleClick(my.sprite.player.body,this.scene);
         }
+        
+        //flip to face player
+        if(my.sprite.player.x > this.sprite.x){ //player to right
+            this.sprite.setFlip(true, false);
+        }
+        else{ //player to left
+            this.sprite.resetFlip();
+        }
     }
     //pathfinding stuff
     handleClick(pointer) {
@@ -1061,8 +1069,6 @@ class shooter extends enemy{
             //It's entirely possible for this to result in a goal impossible to reach, requiring a few attempts to work. Some may call this a bug.
             //I call it the enemy having trouble deciding where to go, giving the player a few frame advantage against it in more complex rooms
 
-            console.log("move: " + this.sprite.x,xChange * SCALE * TILESIZE);
-            //console.log("why");
             this.handleClickShooter({x: this.sprite.x + xChange * SCALE * TILESIZE, y: this.sprite.y + yChange * SCALE * TILESIZE},this.scene);
         }
 
@@ -1077,6 +1083,14 @@ class shooter extends enemy{
             var temp = new bullet(this.scene, this.sprite.x, this.sprite.y, dir, true);
             this.scene.projectiles.bullets.push(temp);
             
+        }
+
+        //flip to face player
+        if(my.sprite.player.x > this.sprite.x){ //player to right
+            this.sprite.setFlip(true, false);
+        }
+        else{ //player to left
+            this.sprite.resetFlip();
         }
     }
     //Pathfinding stuff
