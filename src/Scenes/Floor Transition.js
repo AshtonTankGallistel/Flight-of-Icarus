@@ -62,6 +62,14 @@ class FloorTrans extends Phaser.Scene {
             backgroundColor: '#000000' 
         })
 
+        if(playerStats.currentFloor % 4 == 0){ //every 4 floors cleared, the difficulty increases
+            multiplier += 0.5;
+            my.text.multiplierWarning = this.add.text(config.width / 2, 300, `Difficulty up!\nEnemies now have\nmore health!`, { 
+                fontFamily: "rocketSquare",
+                fontSize: '64px',
+                backgroundColor: '#000000' 
+            })
+        }
         playerStats.currentFloor += 1;
 
         //start game
