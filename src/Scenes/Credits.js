@@ -10,10 +10,6 @@ class Credits extends Phaser.Scene {
         //Doing this solely for the coin sprite. Can't find a better way to do this lol
         //future note: I am no longer using the coin sprite. i forgot if I used this for something else though, so Im leaving it
         this.load.path = "./assets/"
-        this.load.spritesheet("tilemap_sheet", "tilemap_packed.png", {
-            frameWidth: 18,
-            frameHeight: 18
-        })
         
         //text
         this.load.bitmapFont("rocketSquare", "KennyRocketSquare_0.png", "KennyRocketSquare.fnt");
