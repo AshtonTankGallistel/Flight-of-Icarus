@@ -56,16 +56,22 @@
          "name":"Enemies-n-Items",
          "objects":[
                 {
-                 "gid":496,
+                 "gid":965,
                  "height":16,
-                 "id":1,
-                 "name":"Ladder",
+                 "id":2,
+                 "name":"Boss",
+                 "properties":[
+                        {
+                         "name":"Type",
+                         "type":"string",
+                         "value":"Rival"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":16,
                  "x":144,
-                 "y":96
+                 "y":112
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -74,7 +80,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":2,
+ "nextobjectid":3,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

@@ -81,7 +81,6 @@ class Floor extends Phaser.Scene {
         this.floorItemID = 0;
         this.storeItem;
         this.storeItemID = 0;
-        this.floorLadder;
         for(let r = 0; r < 3; r++){ // row
             this.groundLayers.push([]);
             this.blockLayers.push([]);
@@ -115,7 +114,6 @@ class Floor extends Phaser.Scene {
                         "Ball");//.setScale(SCALE);
                     //Note for future me; objects in the tiled layer have their center at the bottom left corner,
                     //while phaser has them in the center.
-                    //console.log(this.floorItem.x,itemSpawn.x,itemSpawn.x * SCALE, r * config.width - config.width);
                     this.floorItemID = Math.floor(Math.random() * 3); //0 to 2
                     this.floorItem.anims.play("item" + this.floorItemID);
                     console.log(this.floorItemID);
@@ -139,23 +137,10 @@ class Floor extends Phaser.Scene {
                         this.storeItem.body.setSize(4 * SCALE, 4 * SCALE);
                 }
 
-                //Ladder spawner; temp, they should spawn after the boss fight
-                let ladderSpawn = this.floors[r][c].findObject("Enemies-n-Items", obj => obj.name === "Ladder");
-                if(ladderSpawn != null){
-                    this.floorLadder = this.physics.add.sprite(ladderSpawn.x * SCALE + r * config.width - config.width,
-                        ladderSpawn.y * SCALE + c * config.height - config.height,
-                        "Ball").setScale(SCALE);
-                    this.floorLadder.anims.play('ladder');
-                    this.floorLadder.body.setSize(4 * SCALE, 4 * SCALE);
-                    //Note for future me; objects in the tiled layer have their center at the bottom left corner,
-                    //while phaser has them in the center.
-                    console.log(this.floorLadder.x,ladderSpawn.x,ladderSpawn.x * SCALE, r * config.width - config.width);
-                }
-
                 //enemy check
                 let enemyExists = this.floors[r][c].findObject("Enemies-n-Items", obj => obj.name === "Enemy");
                 let bossExists = this.floors[r][c].findObject("Enemies-n-Items", obj => obj.name === "Boss");
-                if(ladderSpawn != null){//bossExists != null){ //if/when I add a boss, return here
+                if(bossExists != null){
                     this.roomStatus[r].push('boss');
                 }
                 else if(enemyExists != null){
@@ -209,12 +194,6 @@ class Floor extends Phaser.Scene {
                 playerStats.itemTotal += 1;
                 this.upgradeStat(this.storeItemID);
             }
-        })
-        //temp; Below overlap should be added when ladder is created, not here
-        this.physics.add.overlap(my.sprite.player, this.floorLadder, (obj1, obj2) => {
-            //sceneChange
-            this.bgMusic.stop();
-            this.scene.start("floorTransScene");
         })
 
         //projectile code
@@ -694,25 +673,9 @@ class Floor extends Phaser.Scene {
         // enemy spawn
         let tempGrid = this.layersToGrid(this.floors[this.CURRENT_ROOM.x][this.CURRENT_ROOM.y],[this.groundLayers,this.blockLayers]);
         for(let enemySpawn of this.floors[this.CURRENT_ROOM.x][this.CURRENT_ROOM.y].getObjectLayer("Enemies-n-Items").objects){
-            console.log(enemySpawn);
-            console.log(enemySpawn.name);
-            if(enemySpawn.name == "Enemy" || enemySpawn.name == "Boss"){
-                let tempenemy;
-                switch(enemySpawn.properties[0].value){ //properties[0] points to the Type property
-                    case "Walker":
-                        tempenemy = new walker(enemySpawn.Type,this,tempGrid,enemySpawn.x,enemySpawn.y);
-                        break;
-                    case "Shooter":
-                        tempenemy = new shooter(enemySpawn.Type,this,tempGrid,enemySpawn.x,enemySpawn.y);
-                        break;
-                    default:
-                        tempenemy = null;
-                        break;
-                }
-                if(tempenemy != null){
-                    this.enemies.push(tempenemy);
-                }
-            }
+            //Call function outside of scene to spawn enemy.
+            //That way, any future enemies added only require changes outside of the scene, rather than in.
+            enemySpawner(this,enemySpawn,tempGrid);
         }
         if(this.enemies.length == 0){
             this.unLockRoom();
@@ -913,6 +876,30 @@ class bullet{
     }
 }
 
+function enemySpawner(scene,enemySpawn,grid){
+    console.log(enemySpawn.properties[0].value);
+    let tempenemy;
+    switch(enemySpawn.properties[0].value){ //properties[0] points to the Type property
+        case "Walker":
+            tempenemy = new walker(enemySpawn.Type,scene,grid,enemySpawn.x,enemySpawn.y);
+            break;
+        case "Shooter":
+            tempenemy = new shooter(enemySpawn.Type,scene,grid,enemySpawn.x,enemySpawn.y);
+            break;
+        case "Rival":
+            tempenemy = new rival(enemySpawn.Type,scene,grid,enemySpawn.x,enemySpawn.y);
+            break;
+        default:
+            tempenemy = null;
+            break;
+    }
+    console.log(tempenemy);
+    if(tempenemy != null){
+        console.log("pushing to enemies list");
+        scene.enemies.push(tempenemy);
+    }
+}
+
 class enemy{
     constructor(type, scene, roomGrid, x, y){
         //Sprite setup
@@ -960,7 +947,6 @@ class enemy{
     }
     //handle defeat
     checkHealth(){
-        console.log("hp: " + this.hp);
         if(this.hp <= 0){
             if(Math.random() < 0.75){
                 new coin(this.scene,this.sprite.x,this.sprite.y);
@@ -1178,13 +1164,20 @@ class rival extends shooter{
         this.shootTimer = 1250;
         this.shootTimerSetter = 750;
         this.tweenMoveTime = 250;
+        this.hp = 4 * multiplier;
+    }
+    //handle defeat
+    checkHealth(){
+        if(this.hp <= 0){
+            new ladder(this.scene,this.sprite.x,this.sprite.y);
+            this.sprite.destroy();
+        }
     }
 }
 
 // grabbable drops
 class coin{
     constructor(scene,x,y){
-        console.log("making coin!");
         this.sprite = scene.physics.add.sprite(x, y,"Ball");
         this.sprite.body.setCircle(29).setOffset(7 * SCALE, 7 * SCALE);
         scene.physics.add.collider(my.sprite.player, this.sprite, (p1, c1) => {
@@ -1207,7 +1200,6 @@ class coin{
 
 class heartDrop{
     constructor(scene,x,y){
-        console.log("making heart!");
         this.sprite = scene.physics.add.sprite(x, y,"Ball").anims.play("heartFilled").setScale(SCALE).setSize(TILESIZE * 4/5,TILESIZE * 4/5);
         //this.sprite.body.setCircle(29).setOffset(7 * SCALE, 7 * SCALE);
         scene.physics.add.collider(my.sprite.player, this.sprite, (p1, c1) => {
@@ -1230,6 +1222,20 @@ class heartDrop{
                 c1.setAcceleration(0);
             }
             c1.destroy(); //Always gets destroyed; otherwise can block the player and can be pushed out of bounds
+        })
+    }
+}
+
+// ladder
+class ladder{
+    constructor(scene,x,y){
+        this.sprite = scene.physics.add.sprite(x, y, "Ball").setScale(SCALE);
+        this.sprite.anims.play('ladder');
+        this.sprite.body.setSize(4 * SCALE, 4 * SCALE);
+        scene.physics.add.overlap(my.sprite.player, this.sprite, (obj1, obj2) => {
+            //sceneChange
+            scene.bgMusic.stop();
+            scene.scene.start("floorTransScene");
         })
     }
 }

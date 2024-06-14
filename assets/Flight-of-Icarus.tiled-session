@@ -94,6 +94,9 @@
             "scaleInDock": 3
         },
         "Attic rooms/Attic_4.tmx": {
+            "expandedObjectLayers": [
+                3
+            ],
             "scale": 4.1265624999999995,
             "selectedLayer": 2,
             "viewCenter": {
@@ -102,7 +105,7 @@
             }
         },
         "Attic rooms/Attic_4.tmx#roguelikeSheet": {
-            "scaleInDock": 1
+            "scaleInDock": 3
         },
         "Attic rooms/Attic_Border.tmx": {
             "scale": 3,
@@ -115,6 +118,20 @@
         "Attic rooms/Attic_Border.tmx#roguelikeSheet": {
             "scaleInDock": 4,
             "scaleInEditor": 2
+        },
+        "Attic rooms/Attic_Boss.tmj": {
+            "expandedObjectLayers": [
+                3
+            ],
+            "scale": 4.1265624999999995,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 144.187807648618,
+                "y": 104.0817872018175
+            }
+        },
+        "Attic rooms/Attic_Boss.tmj#roguelikeSheet": {
+            "scaleInDock": 2
         },
         "Attic rooms/Attic_Boss.tmx": {
             "expandedObjectLayers": [
@@ -229,6 +246,7 @@
     "project": "Flight-of-Icarus.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "Attic rooms/Attic_Boss.tmj",
         "Attic rooms/Attic_1.tmj",
         "Attic rooms/Attic_3.tmx",
         "Attic rooms/Attic_2.tmx",
@@ -239,8 +257,7 @@
         "roguelikeSheet.tsx",
         "roguelikeSheet_del.tsx",
         "roguelikeSheet_v4.tsx",
-        "roguelikeSheet_v3.tsx",
-        "roguelikeSheet_v2.tsx"
+        "roguelikeSheet_v3.tsx"
     ],
     "resizeMap.removeObjects": false,
     "tileset.embedInMap": true,
