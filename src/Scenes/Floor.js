@@ -815,6 +815,7 @@ class bullet{
             scene.physics.add.collider(my.sprite.player, this.sprite, (p1, b1) => {
                 if(my.stats.invulnerable <= 0){
                     my.stats.hp -=1;
+                    this.scene.sound.play("face-punch");
                     this.scene.updateUI("hp");
                     my.stats.invulnerable = 1400; //1.4 secs of invincibility
                     if(my.stats.hp <= 0){
@@ -910,6 +911,7 @@ class enemy{
         scene.physics.add.collider(my.sprite.player, this.sprite, (p1, e1) => {
             if(my.stats.invulnerable <= 0){
                 my.stats.hp -=1;
+                this.scene.sound.play("face-punch");
                 this.scene.updateUI("hp");
                 my.stats.invulnerable = 1400; //1.4 secs of invincibility
                 if(my.stats.hp <= 0){
