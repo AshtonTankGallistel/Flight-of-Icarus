@@ -51,12 +51,6 @@ class Instructions extends Phaser.Scene {
             this.scene.start("floorScene");
         });
 
-        //reset stats
-        my.stats = {maxHp:3, hp:3, atk:1, spe:1, invulnerable:0, money:0};
-        playerStats = {itemTotal: 0, currentFloor: 1};
-        multiplier = 1;
-        
-
     }
     
     update(){
