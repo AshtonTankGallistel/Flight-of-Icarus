@@ -207,6 +207,7 @@ class Floor extends Phaser.Scene {
         //temp; Below overlap should be added when ladder is created, not here
         this.physics.add.overlap(my.sprite.player, this.floorLadder, (obj1, obj2) => {
             //sceneChange
+            this.bgMusic.stop();
             this.scene.start("floorTransScene");
         })
 
@@ -280,6 +281,10 @@ class Floor extends Phaser.Scene {
         });
 
         //my.vfx.walking.stop();
+
+        //play music
+        this.bgMusic = this.sound.add("attic-theme");
+        this.bgMusic.play();
 
         // debug key listener (assigned to D key)
         this.input.keyboard.on('keydown-G', () => {
@@ -670,6 +675,7 @@ class bullet{
                 scene.physics.add.collider(this.sprite, en.sprite, (b1, e1) => {
                     en.hp -= my.stats.atk;
                     en.checkHealth()
+                    this.scene.sound.play("hit-fire");
                     this.destroySprite();  
                 })
             }
@@ -682,14 +688,19 @@ class bullet{
                     this.scene.updateUI("hp");
                     my.stats.invulnerable = 1400; //1.4 secs of invincibility
                     if(my.stats.hp <= 0){
+                        this.bgMusic.stop();
                         this.scene.scene.start("gameoverScene");
                     }
+                    this.scene.sound.play("hit-fire");
                     this.destroySprite();
                 }
             })
         }
         this.speed = 650;
         this.bulletLifetime = 750;
+
+        //sound effect on spawn
+        this.scene.sound.play("shoot-fire");
     }
     update(delta){
         //If the sprite doesn't exist (ie this bullet is done) no code is ran
@@ -702,6 +713,7 @@ class bullet{
             //If enough time has passed, the bullet gets "deleted"
             this.bulletLifetime -= delta;
             if(this.bulletLifetime <= 0){
+                //this.scene.sound.play("miss-fire");
                 this.destroySprite();
             }
         }
@@ -740,7 +752,7 @@ class enemy{
         //this.sprite.body.x -= this.sprite.displayWidth / 2;
         //this.sprite.body.y -= this.sprite.displayheight / 2;
         this.scene = scene;
-        
+
         //player collision setup
         scene.physics.add.collider(my.sprite.player, this.sprite, (p1, e1) => {
             if(my.stats.invulnerable <= 0){
@@ -748,6 +760,7 @@ class enemy{
                 this.scene.updateUI("hp");
                 my.stats.invulnerable = 1400; //1.4 secs of invincibility
                 if(my.stats.hp <= 0){
+                    this.bgMusic.stop();
                     this.scene.scene.start("gameoverScene");
                 }
             }
@@ -1013,9 +1026,9 @@ class coin{
                 stopAfter: 5, //spawns 5 instantly, then stops
                 tint: 0xFFC90E
             });
-            console.log("coin got!");
+            scene.sound.play("coin-collect");
+            
             my.stats.money += 1;
-            scene.updateUI("money");
             c1.destroy();
         })
     }

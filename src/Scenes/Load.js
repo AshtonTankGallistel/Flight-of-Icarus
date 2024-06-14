@@ -51,7 +51,15 @@ class Load extends Phaser.Scene {
             //console.log(tilemapName);
             this.load.tilemapTiledJSON(tilemapName, "Attic rooms/" + tilemapName + ".tmj");
         }
-        //this.load.tilemapTiledJSON("title-screen-level", "title-screen-level.tmj");   // Tilemap in JSON
+
+        //audio
+        this.load.audio("coin-collect", "Audio files/cardPlace2.ogg");
+        this.load.audio("shoot-fire", "Audio files/fire-shoot.mp3");
+        this.load.audio("hit-fire", "Audio files/fire-hit.mp3");
+        this.load.audio("miss-fire", "Audio files/fire-miss.mp3");
+        //music
+        this.load.audio("attic-theme", "Audio files/the-search.mp3");
+
     }
 
     create() {
