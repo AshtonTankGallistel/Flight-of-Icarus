@@ -6,4 +6,4 @@ Take your wax candle, and explore a monster-infested attic as you attempt to asc
 
 Made with a Phaser 3 code framework for creating a bare-bones 2D platformer game.
 
-Visual assets provided by Kenny Assets [Pixel Platformer](https://kenney.nl/assets/pixel-platformer) asset pack, with gratitude. Audio assets provided by Pixabay and the people who upload there, with gratitude. The exceptions to this are the sprites for the hearts and projectiles, which were made by me.
+Visual assets provided by Kenny Assets, with gratitude. Audio assets provided by Pixabay and the people who upload there, with gratitude. The exceptions to this are the sprites for the hearts and projectiles, which were made by me.
