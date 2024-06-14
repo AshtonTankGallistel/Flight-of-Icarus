@@ -1,6 +1,6 @@
-class Title extends Phaser.Scene {
+class Instructions extends Phaser.Scene {
     constructor() {
-        super("titleScene");
+        super("instructionsScene");
     }
 
     preload() {
@@ -25,13 +25,19 @@ class Title extends Phaser.Scene {
         this.blockLayer = this.map.createLayer("Blocks-n-Layouts",this.tileset,0,0).setScale(SCALE);
 
         //text
-        my.text.title = this.add.text(288, 32, `FLIGHT OF ICARUS`, { 
+        my.text.Instructions1 = this.add.text(config.width / 4, config.height / 4, `WASD to move`, { 
             fontFamily: "rocketSquare",
-            fontSize: '128px',
+            fontSize: '64px',
             backgroundColor: '#000000' 
         })
-        my.text.title.x = config.width / 2 - my.text.title.displayWidth / 2;
-        my.text.startInstructions = this.add.text(config.width / 2, config.height / 2, `Press space to start!`, { 
+        my.text.Instructions1.x = config.width / 2 - my.text.Instructions1.displayWidth / 2;
+        my.text.Instructions2 = this.add.text(config.width * 3 / 4, config.height / 2, `Arrow keys to shoot`, { 
+            fontFamily: "rocketSquare",
+            fontSize: '64px',
+            backgroundColor: '#000000' 
+        })
+        my.text.Instructions2.x = config.width / 2 - my.text.Instructions2.displayWidth / 2;
+        my.text.startInstructions = this.add.text(config.width / 2, config.height *3 / 4, `Press space to begin!`, { 
             fontFamily: "rocketSquare",
             fontSize: '64px',
             backgroundColor: '#000000' 
@@ -42,7 +48,7 @@ class Title extends Phaser.Scene {
         let SpaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         SpaceKey.on('down',(key,event) =>{
-            this.scene.start("instructionsScene");
+            this.scene.start("floorScene");
         });
 
         //reset stats

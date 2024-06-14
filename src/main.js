@@ -22,7 +22,7 @@ let config = {
     },
     width: 1440,
     height: 1040,
-    scene: [Load, Title, Floor, Credits, FloorTrans, GameOver]
+    scene: [Load, Title, Floor, Credits, FloorTrans, GameOver, Instructions]
 }
 
 var cursors;
