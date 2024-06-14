@@ -65,8 +65,14 @@ class Credits extends Phaser.Scene {
             fontSize: '64px',
             backgroundColor: '#000000' 
         })
+        this.text.IsaacCredit = this.add.text(config.width / 2, 700, `Special thanks to\nThe Binding of Isaac by Edmund McMillen`, { 
+            fontFamily: "rocketSquare",
+            fontSize: '64px',
+            backgroundColor: '#000000' 
+        })
+        this.text.IsaacCredit.x = config.width / 2 - this.text.IsaacCredit.displayWidth / 2;
 
-        this.text.startInstructions = this.add.text(config.width / 4, 800, `Press space to return to the title`, { 
+        this.text.startInstructions = this.add.text(config.width / 4, 900, `Press space to return to the title`, { 
             fontFamily: "rocketSquare",
             fontSize: '64px',
             backgroundColor: '#000000' 
