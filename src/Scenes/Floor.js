@@ -155,11 +155,17 @@ class Floor extends Phaser.Scene {
                 //enemy check
                 let enemyExists = this.floors[r][c].findObject("Enemies-n-Items", obj => obj.name === "Enemy");
                 let bossExists = this.floors[r][c].findObject("Enemies-n-Items", obj => obj.name === "Boss");
-                if(bossExists != null){
+                if(ladderSpawn != null){//bossExists != null){ //if/when I add a boss, return here
                     this.roomStatus[r].push('boss');
                 }
                 else if(enemyExists != null){
                     this.roomStatus[r].push('enemy');
+                }
+                else if(itemSpawn != null){
+                    this.roomStatus[r].push('item');
+                }
+                else if(storeSpawn != null){
+                    this.roomStatus[r].push('store');
                 }
                 else{
                     this.roomStatus[r].push('clear');
@@ -243,6 +249,8 @@ class Floor extends Phaser.Scene {
             //console.log("movespeed: " + moveSpeed(time));
             return x + moveSpeed(time) * (y - x);
         };
+        //roomLockedStatus declaration. Maybe doesn't belong here, but it's the best place to put it
+        this.roomLockedStatus = false;
 
         // UI
         //hp
@@ -281,6 +289,56 @@ class Floor extends Phaser.Scene {
             frequency: 25
         });
         //room entrance
+        my.vfx.doors = {up:null, down:null, left:null, right:null}; //[up,down,left,right]
+        my.vfx.doors.up = this.add.particles(config.width / 2, 0, "kenny-particles", {
+            x: {min: -TILESIZE * SCALE, max: TILESIZE * SCALE},
+            y: 0,
+            frame: ['smoke_02.png', 'smoke_03.png', 'smoke_08.png', 'smoke_09.png'],
+            scale: {start: 0.2, end: 0.3},
+            lifespan: 500,
+            alpha: {start: 0.5, end: 0.05}, 
+            speedY: 250,
+            frequency: 150,
+            quantity: 2,
+            rotate: {start:0, end: 60}
+        }).stop();
+        my.vfx.doors.down = this.add.particles(config.width / 2, config.height, "kenny-particles", {
+            x: {min: -TILESIZE * SCALE, max: TILESIZE * SCALE},
+            y: 0,
+            frame: ['smoke_02.png', 'smoke_03.png', 'smoke_08.png', 'smoke_09.png'],
+            scale: {start: 0.2, end: 0.3},
+            lifespan: 500,
+            alpha: {start: 0.5, end: 0.05}, 
+            speedY: -250,
+            frequency: 150,
+            quantity: 2,
+            rotate: {start:0, end: 60},
+        }).stop();
+        my.vfx.doors.left = this.add.particles(0, config.height / 2, "kenny-particles", {
+            x: 0,
+            y: {min: -TILESIZE * SCALE, max: TILESIZE * SCALE},
+            frame: ['smoke_02.png', 'smoke_03.png', 'smoke_08.png', 'smoke_09.png'],
+            scale: {start: 0.2, end: 0.3},
+            lifespan: 500,
+            alpha: {start: 0.5, end: 0.05},
+            speedX: 250,
+            frequency: 150,
+            quantity: 2,
+            rotate: {start:0, end: 60},
+        }).stop();
+        my.vfx.doors.right = this.add.particles(config.width, config.height / 2, "kenny-particles", {
+            x: 0,
+            y: {min: -TILESIZE * SCALE, max: TILESIZE * SCALE},
+            frame: ['smoke_02.png', 'smoke_03.png', 'smoke_08.png', 'smoke_09.png'],
+            scale: {start: 0.2, end: 0.3},
+            lifespan: 500,
+            alpha: {start: 0.5, end: 0.05}, 
+            speedX: -250,
+            frequency: 150,
+            quantity: 2,
+            rotate: {start:0, end: 60},
+        }).stop();
+
 
 
         //play music
@@ -296,7 +354,6 @@ class Floor extends Phaser.Scene {
     }
     
     update(time,delta){
-        //console.log(this.cameras.main.x);
         // Player movement ----------------------------------------<><>
         // Vertical
         if(wasd.W.isDown && !wasd.S.isDown) { // up
@@ -371,7 +428,6 @@ class Floor extends Phaser.Scene {
             my.vfx.walking.startFollow(my.sprite.player, my.sprite.player.displayWidth/2-10, my.sprite.player.displayHeight/2-5, false);
             my.vfx.walking.setParticleSpeed(this.PARTICLE_VELOCITY, 0);
             my.vfx.walking.start();
-            console.log("vfx: " + my.vfx.walking.y);
 
         } else if(wasd.D.isDown && !wasd.A.isDown) { // right
             if(my.sprite.player.body.velocity.x < 500 * my.stats.spe){
@@ -484,35 +540,60 @@ class Floor extends Phaser.Scene {
         else{
             //console.log(my.sprite.player.x + "," + my.sprite.player.y);
             if(my.sprite.player.x < this.cameras.main.scrollX){ //left
-                this.CURRENT_ROOM.x -= 1;
-                this.cameraMoving = true;
-                this.cameraGoal.x -= config.width;
-                //Move the player so they're past where the lock border would be
-                my.sprite.player.x -= my.sprite.player.displayWidth / 2 + 1;
+                if(this.roomLockedStatus){ //if the player has broke out of bounds mid fight, put them back in.
+                    console.log("fell OoB; putting you back in");
+                    my.sprite.player.x += TILESIZE * SCALE;
+                }
+                else{
+                    this.CURRENT_ROOM.x -= 1;
+                    this.cameraMoving = true;
+                    this.cameraGoal.x -= config.width;
+                    //Move the player so they're past where the lock border would be
+                    my.sprite.player.x -= my.sprite.player.displayWidth / 2 + 1;
+                }
             }
             else if(my.sprite.player.x > this.cameras.main.scrollX + config.width){ //right
-                this.CURRENT_ROOM.x += 1;
-                this.cameraMoving = true;
-                this.cameraGoal.x += config.width;
-                //Move the player so they're past where the lock border would be
-                my.sprite.player.x += my.sprite.player.displayWidth / 2 + 1;
+                if(this.roomLockedStatus){ //if the player has broke out of bounds mid fight, put them back in.
+                    console.log("fell OoB; putting you back in");
+                    my.sprite.player.x += TILESIZE * SCALE;
+                }
+                else{
+                    this.CURRENT_ROOM.x += 1;
+                    this.cameraMoving = true;
+                    this.cameraGoal.x += config.width;
+                    //Move the player so they're past where the lock border would be
+                    my.sprite.player.x += my.sprite.player.displayWidth / 2 + 1;
+                }
             }
             else if(my.sprite.player.y < this.cameras.main.scrollY){ //up
-                this.CURRENT_ROOM.y -= 1;
-                this.cameraMoving = true;
-                this.cameraGoal.y -= config.height;
-                //Move the player so they're past where the lock border would be
-                my.sprite.player.y -= my.sprite.player.displayHeight / 2 + 1;
+                if(this.roomLockedStatus){ //if the player has broke out of bounds mid fight, put them back in.
+                    console.log("fell OoB; putting you back in");
+                    my.sprite.player.y += TILESIZE * SCALE;
+                }
+                else{
+                    this.CURRENT_ROOM.y -= 1;
+                    this.cameraMoving = true;
+                    this.cameraGoal.y -= config.height;
+                    //Move the player so they're past where the lock border would be
+                    my.sprite.player.y -= my.sprite.player.displayHeight / 2 + 1;
+                }
             }
             else if(my.sprite.player.y > this.cameras.main.scrollY + config.height){ //down
-                this.CURRENT_ROOM.y += 1;
-                this.cameraMoving = true;
-                this.cameraGoal.y += config.height;
-                //Move the player so they're past where the lock border would be
-                my.sprite.player.y += my.sprite.player.displayHeight / 2 + 1;
+                if(this.roomLockedStatus){ //if the player has broke out of bounds mid fight, put them back in.
+                    console.log("fell OoB; putting you back in");
+                    my.sprite.player.y -= TILESIZE * SCALE;
+                }
+                else{
+                    this.CURRENT_ROOM.y += 1;
+                    this.cameraMoving = true;
+                    this.cameraGoal.y += config.height;
+                    //Move the player so they're past where the lock border would be
+                    my.sprite.player.y += my.sprite.player.displayHeight / 2 + 1;
+                }
             }
             //On room change
             if(this.cameraMoving == true){
+                this.smokeCheck();
                 my.text.itemPopup.visible = false; //clear any item text that has appeared
                 if(this.roomStatus[this.CURRENT_ROOM.x][this.CURRENT_ROOM.y] == 'enemy'
                     || this.roomStatus[this.CURRENT_ROOM.x][this.CURRENT_ROOM.y] == 'boss'){
@@ -520,6 +601,87 @@ class Floor extends Phaser.Scene {
                 }
             }
         }
+        
+    }
+
+    //Check if any neighboring rooms should have smoke coming out
+    smokeCheck(){
+        //first, reset smoke
+        my.vfx.doors.up.stop();
+        my.vfx.doors.down.stop();
+        my.vfx.doors.left.stop();
+        my.vfx.doors.right.stop();        
+
+        //For each direction, check if it's a door to a special room
+        let directions = [[-1,0],[1,0],[0,-1],[0,1]]; //up,down,left,right
+        for(let dir of directions){
+            let vertical = dir[0];
+            let horizontal = dir[1];
+            if(this.CURRENT_ROOM.x + horizontal < 0 || this.CURRENT_ROOM.x + horizontal > 2 ||
+                this.CURRENT_ROOM.y + vertical < 0 || this.CURRENT_ROOM.y + vertical > 2){
+                    console.log(this.CURRENT_ROOM.x + horizontal,this.CURRENT_ROOM.y + vertical + " skipped!");
+                    continue;
+            }
+            let roomState = this.roomStatus[this.CURRENT_ROOM.x + horizontal][this.CURRENT_ROOM.y + vertical];
+            console.log(roomState,roomState == 'item',roomState == 'store',roomState == 'boss');
+            if(roomState == 'item' || roomState == 'store' || roomState == 'boss'){
+                let smokeColor;
+                //tint based off the room
+                switch(roomState){
+                    case "item":
+                        smokeColor = 0xFFFD55;
+                        break;
+                    case "store":
+                        smokeColor = 0xFFFD55;
+                        break;
+                    case "boss":
+                        smokeColor = 0xffffff;
+                        break;
+                    default:
+                        smokeColor = 0x000000;
+                        break;
+                }
+
+                console.log(dir);
+
+                //check which direction we're looking in, and choose a doorway based off that
+                //Using strings since it had trouble comparing arrays and seeing if they were equal
+                switch(dir.toString()){
+                    case "-1,0": //up
+                        my.vfx.doors.up.x = config.width * (this.CURRENT_ROOM.x - 0.5);
+                        my.vfx.doors.up.y = config.height * (this.CURRENT_ROOM.y - 1);
+                        my.vfx.doors.up.particleTint = smokeColor;
+                        my.vfx.doors.up.start()
+                        console.log("up started!");
+                        break;
+                    case "1,0": //down
+                        my.vfx.doors.down.x = config.width * (this.CURRENT_ROOM.x - 0.5);
+                        my.vfx.doors.down.y = config.height * (this.CURRENT_ROOM.y);
+                        my.vfx.doors.down.particleTint = smokeColor;
+                        my.vfx.doors.down.start()
+                        console.log("down started!");
+                        break;
+                    case "0,-1": //left
+                        my.vfx.doors.left.x = config.width * (this.CURRENT_ROOM.x - 1);
+                        my.vfx.doors.left.y = config.height * (this.CURRENT_ROOM.y - 0.5);
+                        my.vfx.doors.left.particleTint = smokeColor;
+                        my.vfx.doors.left.start()
+                        console.log("left started!");
+                        break;
+                    case "0,1": //right
+                        my.vfx.doors.right.x = config.width * (this.CURRENT_ROOM.x);
+                        my.vfx.doors.right.y = config.height * (this.CURRENT_ROOM.y - 0.5);
+                        my.vfx.doors.right.particleTint = smokeColor;
+                        my.vfx.doors.right.start()
+                        console.log("right started!");
+                        break;
+                    default: //Shouldn't be possible to get here btw
+                        console.log("door code broke!");
+                        break;
+                }
+            }
+        }
+        
     }
 
     //locks the room when you enter a room with enemies in it
@@ -532,28 +694,38 @@ class Floor extends Phaser.Scene {
         // enemy spawn
         let tempGrid = this.layersToGrid(this.floors[this.CURRENT_ROOM.x][this.CURRENT_ROOM.y],[this.groundLayers,this.blockLayers]);
         for(let enemySpawn of this.floors[this.CURRENT_ROOM.x][this.CURRENT_ROOM.y].getObjectLayer("Enemies-n-Items").objects){
-            console.log(enemySpawn.properties[0].value);
-            let tempenemy;
-            switch(enemySpawn.properties[0].value){ //properties[0] points to the Type property
-                case "Walker":
-                    tempenemy = new walker(enemySpawn.Type,this,tempGrid,enemySpawn.x,enemySpawn.y);
-                    break;
-                case "Shooter":
-                    tempenemy = new shooter(enemySpawn.Type,this,tempGrid,enemySpawn.x,enemySpawn.y);
-                    break;
-                default:
-                    tempenemy = null;
-                    break;
+            console.log(enemySpawn);
+            console.log(enemySpawn.name);
+            if(enemySpawn.name == "Enemy" || enemySpawn.name == "Boss"){
+                let tempenemy;
+                switch(enemySpawn.properties[0].value){ //properties[0] points to the Type property
+                    case "Walker":
+                        tempenemy = new walker(enemySpawn.Type,this,tempGrid,enemySpawn.x,enemySpawn.y);
+                        break;
+                    case "Shooter":
+                        tempenemy = new shooter(enemySpawn.Type,this,tempGrid,enemySpawn.x,enemySpawn.y);
+                        break;
+                    default:
+                        tempenemy = null;
+                        break;
+                }
+                if(tempenemy != null){
+                    this.enemies.push(tempenemy);
+                }
             }
-            if(tempenemy != null){
-                this.enemies.push(tempenemy);
-            }
+        }
+        if(this.enemies.length == 0){
+            this.unLockRoom();
+            this.roomLockedStatus = false;
+        }
+        else{
+            this.roomLockedStatus = true;
         }
     }
     
     //unlocks the room when you clear all enemies
     unLockRoom(){
-        console.log("unlocking room");
+        this.roomLockedStatus = false;
         this.roomLockLayer.x = - (config.width * 5);
         this.roomLockLayer.y = - (config.height * 5);
         this.roomStatus[this.CURRENT_ROOM.x][this.CURRENT_ROOM.y] = 'clear';
@@ -592,7 +764,6 @@ class Floor extends Phaser.Scene {
 
     // Updates the UI. What section gets updated is determined by the string inputted for 'section'
     updateUI(section){
-        console.log("bruh" + my.stats.hp);
         switch(section){
             case "hp":
                 for(let i = 1; i <= my.stats.maxHp; i++){
@@ -689,7 +860,7 @@ class bullet{
                     this.scene.updateUI("hp");
                     my.stats.invulnerable = 1400; //1.4 secs of invincibility
                     if(my.stats.hp <= 0){
-                        this.bgMusic.stop();
+                        this.scene.bgMusic.stop();
                         this.scene.scene.start("gameoverScene");
                     }
                     this.scene.sound.play("hit-fire");
@@ -750,8 +921,7 @@ class enemy{
                                         SCALE * y + ((scene.CURRENT_ROOM.y - 1) * config.height),"Ball").setOrigin(0,0);
         this.sprite.anims.play('enemyWalk').setScale(SCALE - 1);
         this.sprite.setSize(TILESIZE - 1,TILESIZE - 1);//.setOffset(0, 0);
-        //this.sprite.body.x -= this.sprite.displayWidth / 2;
-        //this.sprite.body.y -= this.sprite.displayheight / 2;
+        this.sprite.y -= TILESIZE * SCALE; //Makes up for some odd offsetting that occurs upong spawning
         this.scene = scene;
 
         //player collision setup
@@ -761,7 +931,7 @@ class enemy{
                 this.scene.updateUI("hp");
                 my.stats.invulnerable = 1400; //1.4 secs of invincibility
                 if(my.stats.hp <= 0){
-                    this.bgMusic.stop();
+                    this.scene.bgMusic.stop();
                     this.scene.scene.start("gameoverScene");
                 }
             }

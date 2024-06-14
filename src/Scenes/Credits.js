@@ -32,32 +32,50 @@ class Credits extends Phaser.Scene {
         this.blockLayer = this.map.createLayer("Blocks-n-Layouts",this.tileset,0,0).setScale(SCALE);
 
         //text
-        my.text.win = this.add.text(288, 100, `CREDITS`, { 
+        this.text = {};
+        this.text.win = this.add.text(288, 100, `CREDITS`, { 
             fontFamily: "rocketSquare",
             fontSize: '128px',
             backgroundColor: '#000000' 
         })
-        my.text.myCredits = this.add.text(288, 250, `Game coded by\nAshton Gallistel`, { 
+        this.text.myCredits1 = this.add.text(50, 250, `Game coded by\nAshton Gallistel`, { 
             fontFamily: "rocketSquare",
             fontSize: '64px',
             backgroundColor: '#000000' 
         })
-        my.text.myCredits = this.add.text(288, 400, `bullet and heart sprites\nby Ashton Gallistel`, { 
+        this.text.myCredits2 = this.add.text(50, 400, `Bullet and heart sprites\nby Ashton Gallistel`, { 
             fontFamily: "rocketSquare",
             fontSize: '64px',
             backgroundColor: '#000000' 
         })
-        my.text.KenCredits = this.add.text(288, 550, `Audio and visual assets\nfrom Kenney Assets`, { 
-            fontFamily: "rocketSquare",
-            fontSize: '64px',
-            backgroundColor: '#000000' 
-        })
-        my.text.startInstructions = this.add.text(288, 750, `Press space to\nreturn to the title`, { 
+        this.text.KenCredits = this.add.text(50, 550, `Audio and visual assets\nfrom Kenney Assets`, { 
             fontFamily: "rocketSquare",
             fontSize: '64px',
             backgroundColor: '#000000' 
         })
 
+        this.text.soundCredits1 = this.add.text(config.width / 2, 250, `"The Search", the music,\nby Barnabas from Pixabay`, { 
+            fontFamily: "rocketSquare",
+            fontSize: '64px',
+            backgroundColor: '#000000' 
+        })
+        this.text.soundCredits2 = this.add.text(config.width / 2, 400, `Fireball hit sound effect by\nfloraphonic from Pixabay`, { 
+            fontFamily: "rocketSquare",
+            fontSize: '64px',
+            backgroundColor: '#000000' 
+        })
+        this.text.soundCredits3 = this.add.text(config.width / 2, 550, `Remaining sound effects\nmade by Pixabay`, { 
+            fontFamily: "rocketSquare",
+            fontSize: '64px',
+            backgroundColor: '#000000' 
+        })
+
+        this.text.startInstructions = this.add.text(config.width / 4, 800, `Press space to return to the title`, { 
+            fontFamily: "rocketSquare",
+            fontSize: '64px',
+            backgroundColor: '#000000' 
+        })
+        
         //start game
         let SpaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
