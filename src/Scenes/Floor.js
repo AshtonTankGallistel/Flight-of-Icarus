@@ -324,11 +324,6 @@ class Floor extends Phaser.Scene {
         this.bgMusic = this.sound.add("attic-theme");
         this.bgMusic.play();
 
-        // debug key listener (assigned to D key)
-        this.input.keyboard.on('keydown-G', () => {
-            this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
-            this.physics.world.debugGraphic.clear()
-        }, this);
 
     }
     
@@ -1161,6 +1156,7 @@ class shooter extends enemy{
 class rival extends shooter{
     constructor(type, scene, roomGrid, x, y){
         super(type, scene, roomGrid, x, y);
+        this.sprite.anims.play("enemyRival");
         this.shootTimer = 1250;
         this.shootTimerSetter = 750;
         this.tweenMoveTime = 250;

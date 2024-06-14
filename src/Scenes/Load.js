@@ -86,14 +86,6 @@ class Load extends Phaser.Scene {
         });
 
         this.anims.create({
-            key: 'jump',
-            defaultTextureKey: "platformer_characters",
-            frames: [
-                { frame: "tile_0001.png" }
-            ],
-        });
-
-        this.anims.create({
             key: 'ladder',
             defaultTextureKey: "tilemap_sheet",
             frames: [
@@ -117,6 +109,7 @@ class Load extends Phaser.Scene {
             ],
         });
 
+        //enemy animations
         this.anims.create({
             key: 'enemyWalk',
             defaultTextureKey: "platformer_characters",
@@ -134,6 +127,17 @@ class Load extends Phaser.Scene {
             frames: [
                 { frame: "tile_0004.png"},
                 { frame: "tile_0005.png"}
+            ],
+            frameRate: 15,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'enemyRival',
+            defaultTextureKey: "platformer_characters",
+            frames: [
+                { frame: "tile_0006.png"},
+                { frame: "tile_0007.png"}
             ],
             frameRate: 15,
             repeat: -1
